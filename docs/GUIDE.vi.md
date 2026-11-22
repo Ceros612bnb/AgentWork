@@ -1,5 +1,8 @@
 # Hướng dẫn dùng Agent Mandate
 
+> Bản đầy đủ từng bước, có câu lệnh để sao chép và mục xử lý lỗi, nằm trên website: trang **/guide?lang=vi**.
+> Muốn thử nhanh trong khoảng 10 phút: trang **/join** (Starter mandate, một giao dịch).
+
 Agent Mandate cho AI agent của bạn **một khoản ngân sách nhỏ kèm luật chi tiêu do bạn đặt**, được contract
 thực thi trên BNB Chain. Agent bị lừa cũng không vượt được phạm vi. Ai cũng kiểm chứng được agent thuộc về một
 người thật (qua Binance Agent ID) và đã làm gì.
@@ -17,12 +20,18 @@ người thật (qua Binance Agent ID) và đã làm gì.
 ## A. Chuẩn bị agent (một lần)
 1. Nhận **Agent ID**: Binance App → Wallet → banner Agent ID.
 2. Cài Agentic Wallet Skill cho AI agent và đăng nhập theo hướng dẫn chính thức:
-   `npx skills add binance/binance-skills-hub/skills/binance-web3/binance-agentic-wallet`
+   `npx skills add https://github.com/binance/binance-skills-hub/tree/main/skills/binance-web3/binance-agentic-wallet`
+   `npm install -g @binance/agentic-wallet@1.12.0`
 3. Cài **Agent Mandate Skill**: chép `skill/mandate` vào thư mục skills của agent, `npm install`, tạo
    `config.json` từ `config.example.json`.
 4. Bật **Developer Mode** (Binance App → quản lý Agentic Wallet → Settings). Chỉ bạn bật được, có thời hạn.
 5. Nạp khoảng 0,0005 BNB vào ví Agentic để trả gas. Ngân sách chi tiêu nằm trong mandate, không nằm ở ví agent.
 6. Hỏi agent: *"Agent Mandate đã sẵn sàng chưa?"* → `ready`. Agent sẽ đưa bạn địa chỉ ví của nó.
+
+## B0. Lối nhanh: Starter mandate
+Không cần ví thứ hai. Nói với agent: *"Nhận Agent Mandate starter cho tôi"* (`preview claim-starter`).
+Bạn được một mandate 0,00005 BNB, hiệu lực 14 ngày, chỉ mua được bản tin demo (tiền mua bị đốt).
+Mỗi ví Agent ID nhận một lần.
 
 ## B. Tạo mandate (trên web, bằng ví chính)
 1. Mở trang **My mandates**, bấm *Connect your wallet* (ví chính, **không** dùng ví Agentic).

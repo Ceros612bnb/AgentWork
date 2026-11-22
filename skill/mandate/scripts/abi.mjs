@@ -25,6 +25,13 @@ export const deskAbi = parseAbi([
   "function buyNote(uint256 topic) payable",
 ]);
 
+export const faucetAbi = parseAbi([
+  "function claim() returns (uint256)",
+  "function starterOf(address agent) view returns (uint256)",
+  "function poolBalance() view returns (uint256)",
+  "function BUDGET() view returns (uint128)",
+]);
+
 export const STATUS = ["Executed", "Blocked", "Proposed"];
 export const REASON = ["None", "NoAgentID", "Inactive", "NotAllowed", "OverPerTxCap", "OverDailyCap", "InsufficientFunds"];
 export const REASON_TEXT = {

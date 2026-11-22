@@ -66,6 +66,18 @@ async function main() {
   const rec = await mandate.recordOf(holder);
   console.log(`record: executed=${rec.executed} blocked=${rec.blocked} autoRevoked=${rec.autoRevoked}`);
   if ((await desk.sold()) !== 1n || (await mandate.isActive(1)) || rec.autoRevoked !== 1n) throw new Error("unexpected state");
+  // Self-serve starter mandate claimed by the same real Agent ID holder
+  const desk2 = await ethers.deployContract("DemoResearchDesk", [E("0.00001"), seller.address]);
+  const faucet = await ethers.deployContract("StarterFaucet", [
+    await mandate.getAddress(), BSC.agentId, await desk2.getAddress(), perms[0].selector, principal.address,
+  ]);
+  await (await faucet.fund({ value: E("0.001") })).wait();
+  const rc3 = await (await faucet.connect(agent).claim()).wait();
+  const starter = await faucet.starterOf(holder);
+  console.log("starter mandate claimed:", starter.toString(), "gas:", rc3.gasUsed.toString());
+  const r4 = await (await mandate.connect(agent).execute(starter, await desk2.getAddress(), E("0.00001"), desk2.interface.encodeFunctionData("buyNote", [1]))).wait();
+  console.log("starter purchase gas:", r4.gasUsed.toString(), "notes sold:", (await desk2.sold()).toString());
+  if ((await desk2.sold()) !== 1n) throw new Error("starter purchase failed");
   console.log("MANDATE FORK CHECK PASSED");
 }
 

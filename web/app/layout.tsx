@@ -23,10 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </a>
             <nav className="nav">
+              <a href="/join">Join the challenge</a>
+              <a href="/guide">Guide</a>
               <a href="/#verify">Verify an agent</a>
-              <a href="/#how">How it works</a>
               <a href="/principal">My mandates</a>
-              <a href={`${REPO}/blob/main/docs/GUIDE.en.md`} target="_blank" rel="noopener noreferrer">Guide</a>
             </nav>
             <span className="spacer" />
             <a className="btn btn-primary sm" href="/principal">Create a mandate</a>

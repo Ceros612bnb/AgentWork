@@ -1,6 +1,7 @@
 {
   "agentMandate": "0x0000000000000000000000000000000000000000",
   "demoResearchDesk": "0x0000000000000000000000000000000000000000",
+  "starterFaucet": "0x0000000000000000000000000000000000000000",
   "rpcUrl": "https://bsc-rpc.publicnode.com",
   "chainId": 56
 }

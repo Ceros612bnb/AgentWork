@@ -51,9 +51,17 @@ outsiders cannot see what an agent is allowed to do or who answers for it.
 - Events form a public audit trail: `MandateCreated`, `Delegated`, `Executed`, `Blocked`, `Proposed`,
   `Approved`, `Revoked`.
 
+## Starter faucet (onboarding)
+
+`StarterFaucet` is a principal that creates a small sponsored mandate (0.00005 BNB, 14 days, demo notes
+only, auto-revoke after 3 violations) for any Agent ID wallet that calls `claim()`, once per wallet. The
+budget cannot be withdrawn by the agent and can only buy demo notes whose payments are burned. Its
+immutable sponsor may withdraw the unused pool, revoke starters and reclaim their unused budget.
+
 ## Admin
 
-None. No owner, no fee, no pause, no upgrade. Funds belong to principals and can only be withdrawn by them.
+AgentMandate: none. No owner, no fee, no pause, no upgrade. Funds belong to principals and can only be
+withdrawn by them. StarterFaucet: the sponsor powers listed above.
 
 ## Out of scope for v0.1
 

@@ -13,13 +13,14 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createPublicClient, encodeFunctionData, formatEther, http, isAddress, isHex, parseEther } from "viem";
 import { bsc, bscTestnet, hardhat } from "viem/chains";
-import { REASON, REASON_TEXT, STATUS, deskAbi, mandateAbi } from "./abi.mjs";
+import { REASON, REASON_TEXT, STATUS, deskAbi, faucetAbi, mandateAbi } from "./abi.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const configPath = join(here, "..", "config.json");
 const config = existsSync(configPath) ? JSON.parse(readFileSync(configPath, "utf8")) : {};
 const MANDATE = process.env.AGENT_MANDATE_ADDRESS || config.agentMandate;
 const DESK = process.env.DEMO_DESK_ADDRESS || config.demoResearchDesk;
+const FAUCET = process.env.STARTER_FAUCET_ADDRESS || config.starterFaucet;
 const RPC = process.env.BSC_RPC_URL || config.rpcUrl || "https://bsc-rpc.publicnode.com";
 const CHAIN_ID = Number(process.env.CHAIN_ID || config.chainId || 56);
 // Local development only: AM_FROM=<address> skips `baw` for reads, AM_DRY_RUN=1 skips `baw` previews.
@@ -126,6 +127,8 @@ async function cmdReady() {
   let devMode = null;
   if (!FROM) devMode = baw(["wallet", "settings", "--json"])?.data?.devMode ?? null;
   const [isAgent, gas, ids] = await Promise.all([read("isAgent", [address]), client.getBalance({ address }), read("mandatesOf", [address])]);
+  const hasFaucet = FAUCET && isAddress(FAUCET) && !isZero(FAUCET);
+  const starter = hasFaucet ? await read("starterOf", [address], FAUCET, faucetAbi) : 0n;
   const active = [];
   for (const id of ids) if (await read("isActive", [id])) active.push(id);
   const checks = {
@@ -134,12 +137,16 @@ async function cmdReady() {
     developerModeExpiresAt: devMode?.expiresAt ? iso(devMode.expiresAt) : null,
     hasGas: gas >= 100000000000000n, // 0.0001 BNB covers many actions
     activeMandates: active.length,
+    starterMandate: starter === 0n ? null : starter,
   };
   const todo = [];
   if (!checks.hasAgentId) todo.push("Claim an Agent ID in the Binance App: Wallet > homepage banner > Agent ID.");
   if (checks.developerModeEnabled === false) todo.push("Enable Developer Mode: Binance App > Agentic Wallet management > Settings (expires after a few days).");
   if (!checks.hasGas) todo.push("Add a little BNB (>= 0.0001) to this Agentic Wallet for gas. The budget itself sits in the mandate.");
-  if (active.length === 0) todo.push(`Ask your principal (your own main wallet) to create a mandate for this agent address on the Agent Mandate website: ${address}`);
+  if (active.length === 0) {
+    if (hasFaucet && starter === 0n) todo.push("Quickest start: claim a free starter mandate (a tiny pre-funded budget for demo notes): node scripts/am.mjs preview claim-starter");
+    todo.push(`Or create your own mandate for this agent on the Agent Mandate website (My mandates) with your main wallet, using this agent address: ${address}`);
+  }
   out({ success: true, address, checks, activeMandateIds: active, ready: checks.hasAgentId && checks.developerModeEnabled !== false && checks.hasGas && active.length > 0, todo });
 }
 
@@ -263,12 +270,24 @@ async function buildCall(action, args, from, flags) {
         summary: [`Delegate a narrower mandate from #${parent} to sub-agent ${sub}: ${JSON.stringify(describeTerms(terms))}, ${p.length} permission(s)`],
       };
     }
+    case "claim-starter": {
+      if (!FAUCET || !isAddress(FAUCET) || isZero(FAUCET)) fail("Starter faucet not configured (config.json -> starterFaucet).");
+      const already = await read("starterOf", [from], FAUCET, faucetAbi);
+      if (already !== 0n) fail(`This wallet already claimed starter mandate #${already}. Use: node scripts/am.mjs show ${already}`);
+      const [pool, budget] = await Promise.all([read("poolBalance", [], FAUCET, faucetAbi), read("BUDGET", [], FAUCET, faucetAbi)]);
+      if (pool < budget) fail("The starter pool is empty right now. Ask the team, or create your own mandate on the website.");
+      return {
+        to: FAUCET,
+        data: encodeFunctionData({ abi: faucetAbi, functionName: "claim", args: [] }),
+        summary: [`Claim a free starter mandate: ${bnb(budget)} BNB budget that can only buy demo research notes (payments are burned), valid 14 days`],
+      };
+    }
     case "resign": {
       const id = toId(args[0]);
       return { to: MANDATE, data: encodeFunctionData({ abi: mandateAbi, functionName: "revoke", args: [id] }), summary: [`Resign from (revoke) mandate ${id}`] };
     }
     default:
-      fail("Unknown action. Use: buy-note <id> [topic] | execute <id> <target> <bnb> <dataHex> | delegate <parentId> <sub> <perTxBnb> <dailyBnb> <coSignBnb> <days> <maxViolations> <target:selector,...> | resign <id>");
+      fail("Unknown action. Use: claim-starter | buy-note <id> [topic] | execute <id> <target> <bnb> <dataHex> | delegate <parentId> <sub> <perTxBnb> <dailyBnb> <coSignBnb> <days> <maxViolations> <target:selector,...> | resign <id>");
   }
 }
 
@@ -312,7 +331,7 @@ const commands = {
 };
 if (!commands[cmd]) {
   console.log(
-    "Usage: node am.mjs <ready | mandates [address|me] | show <id> | check <id> <target> <bnb> <dataHex> | record [address|me] | accountable <id> | preview <buy-note|execute|delegate|resign> ...>"
+    "Usage: node am.mjs <ready | mandates [address|me] | show <id> | check <id> <target> <bnb> <dataHex> | record [address|me] | accountable <id> | preview <claim-starter|buy-note|execute|delegate|resign> ...>"
   );
   process.exit(cmd ? 1 : 0);
 }

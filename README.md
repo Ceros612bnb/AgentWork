@@ -43,12 +43,16 @@ Specification: [docs/MANDATE-SPEC.md](docs/MANDATE-SPEC.md).
 |---|---|
 | `AgentMandate` | Mandates, enforcement, proposals, delegation, revocation, public record |
 | `DemoResearchDesk` | Demo pay-per-use service: a note costs 0.00001 BNB and the payment is burned |
+| `StarterFaucet` | One-transaction onboarding: any Agent ID wallet claims a small sponsored starter mandate (demo notes only), once |
 | Agent ID (external) | `0x60b9262456de011f7d15a54cdd8c48baaa8b022f` |
 
 ### Admin permissions (disclosure)
 
-**None.** No owner, no pause, no upgrade, no fee. Budgets belong to principals and can only be withdrawn
-by them, always to themselves. The contract never pulls funds and asks for no token approvals.
+`AgentMandate` and `DemoResearchDesk`: **none.** No owner, no pause, no upgrade, no fee. Budgets belong to
+principals and can only be withdrawn by them, always to themselves. No token approvals.
+
+`StarterFaucet`: its immutable `sponsor` (the deployer) can withdraw the unused pool, revoke a starter
+mandate and pull its unused budget back into the pool. It cannot touch anyone else's funds.
 
 ## Repository layout
 
@@ -62,15 +66,15 @@ docs/        Specification, research survey, user guides (VI/EN)
 ## Quick start
 
 ```bash
-cd contracts && npm install && npx hardhat test        # 12 tests
+cd contracts && npm install && npx hardhat test        # 15 tests
 FORK_BSC=1 BSC_RPC_URL=https://bsc-rpc.publicnode.com npm run fork-check   # real Agent ID on a BSC fork
 cp .env.example .env                                    # DEPLOYER_PRIVATE_KEY (fresh wallet), ETHERSCAN_API_KEY
-npm run deploy:bsc                                      # AgentMandate + DemoResearchDesk
+STARTER_POOL=0.002 npm run deploy:bsc                   # AgentMandate, DemoResearchDesk, StarterFaucet (+40 starters)
 ```
 
 Local: `npx hardhat node`, then `npm run seed:local` (six scenarios, writes `web/.env.local`).
 Skill: `cd skill/mandate && npm install && cp config.example.json config.json && node scripts/am.mjs ready`.
-Web: `cd web && npm install && npm run dev`.
+Web: `cd web && npm install && npm run dev`. Users start at `/join` and follow `/guide` (English and Vietnamese).
 
 ## Hackathon safety checklist
 

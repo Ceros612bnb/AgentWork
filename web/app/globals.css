@@ -209,3 +209,25 @@ section.panel { margin-top: 20px; }
   .arow { grid-template-columns: 100px minmax(0, 1fr) auto; }
   .arow > :last-child { display: none; }
 }
+
+/* ------------------------------------------------------------ join + guide */
+.goal { font-size: 15px; color: var(--muted); }
+.goal b { font-size: 56px; color: var(--accent-text); line-height: 1; }
+.bar { height: 10px; background: var(--panel-2); border-radius: 99px; overflow: hidden; margin: 12px 0; }
+.bar i { display: block; height: 100%; background: var(--yellow); border-radius: 99px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px 16px; font-size: 13px; }
+.checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.guide { display: grid; gap: 0; }
+.gstep { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); }
+.gstep:first-child { border-top: 0; padding-top: 0; }
+.gstep .n { width: 32px; height: 32px; border-radius: 8px; background: var(--yellow); color: var(--on-yellow); display: grid; place-items: center; font-weight: 700; }
+.gbody h3 { margin: 4px 0 8px; font-size: 17px; }
+.gbody p { margin: 6px 0; color: var(--fg); }
+.code { display: flex; gap: 8px; align-items: flex-start; background: var(--panel-2); border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+.code pre { flex: 1; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
+.okline { color: var(--up) !important; font-size: 14px; }
+.say { color: var(--accent-text) !important; font-weight: 500; }
+.code pre { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-all; }
+.gbody { min-width: 0; }
+.gbody p, .say { overflow-wrap: anywhere; }
+@media (max-width: 520px) { .gstep { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; } }

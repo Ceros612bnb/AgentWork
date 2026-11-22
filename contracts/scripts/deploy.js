@@ -21,6 +21,16 @@ async function main() {
   const mrc = await mandate.deploymentTransaction().wait();
   const desk = await ethers.deployContract("DemoResearchDesk", [ethers.parseEther(DEMO.price), DEMO.beneficiary]);
   await desk.waitForDeployment();
+  const selector = desk.interface.getFunction("buyNote").selector;
+  const faucet = await ethers.deployContract("StarterFaucet", [
+    await mandate.getAddress(), agentId, await desk.getAddress(), selector, deployer.address,
+  ]);
+  await faucet.waitForDeployment();
+  // Optional: STARTER_POOL=0.002 funds 40 starter mandates (0.00005 BNB each).
+  if (process.env.STARTER_POOL) {
+    await (await faucet.fund({ value: ethers.parseEther(process.env.STARTER_POOL) })).wait();
+    console.log(`Funded the starter pool with ${process.env.STARTER_POOL} BNB`);
+  }
 
   const out = {
     network: network.name,
@@ -28,6 +38,8 @@ async function main() {
     agentId,
     agentMandate: await mandate.getAddress(),
     demoResearchDesk: await desk.getAddress(),
+    starterFaucet: await faucet.getAddress(),
+    sponsor: deployer.address,
     demoPrice: DEMO.price,
     deployBlock: mrc.blockNumber,
     deployedAt: new Date().toISOString(),
@@ -39,6 +51,7 @@ async function main() {
   if (network.name === "bsc") {
     console.log(`\nVerify:\n  npx hardhat verify --network bsc ${out.agentMandate} ${agentId}`);
     console.log(`  npx hardhat verify --network bsc ${out.demoResearchDesk} ${ethers.parseEther(DEMO.price)} ${DEMO.beneficiary}`);
+    console.log(`  npx hardhat verify --network bsc ${out.starterFaucet} ${out.agentMandate} ${agentId} ${out.demoResearchDesk} ${selector} ${deployer.address}`);
   }
 }
 

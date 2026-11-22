@@ -12,6 +12,7 @@ import {
 
 export const MANDATE = (process.env.NEXT_PUBLIC_MANDATE_ADDRESS || zeroAddress) as Address;
 export const DESK = (process.env.NEXT_PUBLIC_DESK_ADDRESS || zeroAddress) as Address;
+export const FAUCET = (process.env.NEXT_PUBLIC_FAUCET_ADDRESS || zeroAddress) as Address;
 const RPC = process.env.NEXT_PUBLIC_RPC_URL || "https://bsc-rpc.publicnode.com";
 export const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || 56);
 export const EXPLORER = CHAIN_ID === 56 ? "https://bscscan.com" : null;
@@ -53,6 +54,14 @@ export const mandateAbi = parseAbi([
 ]);
 
 export const deskAbi = parseAbi(["function price() view returns (uint256)", "function sold() view returns (uint256)"]);
+
+export const faucetAbi = parseAbi([
+  "function claimantCount() view returns (uint256)",
+  "function claimants(uint256 offset, uint256 limit) view returns (address[])",
+  "function starterOf(address agent) view returns (uint256)",
+  "function poolBalance() view returns (uint256)",
+  "function BUDGET() view returns (uint128)",
+]);
 
 export const events = {
   created: parseAbiItem("event MandateCreated(uint256 indexed id, address indexed principal, address indexed operator, uint256 deposit)"),
@@ -176,6 +185,34 @@ export async function fetchProposals(mandateIds: Set<number>): Promise<ProposalV
   return all
     .map((p, i) => ({ id: i + 1, mandateId: Number(p.mandateId), target: p.target, value: p.value, done: p.done }))
     .filter((p) => mandateIds.has(p.mandateId));
+}
+
+// ------------------------------------------------------------------ participation
+
+/** Agent ID wallets that interacted with our contracts: starter claimants plus operators with any action. */
+export async function fetchParticipants(): Promise<{ wallets: Address[]; poolLeft: bigint | null; budget: bigint | null }> {
+  const mandates = await fetchAllMandates(1000);
+  const records = await fetchRecords(mandates.map((x) => x.operator));
+  const set = new Map<string, Address>();
+  for (const [k, r] of records) if (r.executed + r.blocked > 0n) set.set(k, k as Address);
+  let poolLeft: bigint | null = null;
+  let budget: bigint | null = null;
+  if (FAUCET !== zeroAddress) {
+    const f = { address: FAUCET, abi: faucetAbi } as const;
+    const n = await publicClient.readContract({ ...f, functionName: "claimantCount" });
+    const list = await publicClient.readContract({ ...f, functionName: "claimants", args: [0n, n] });
+    for (const a of list) set.set(a.toLowerCase(), a);
+    [poolLeft, budget] = await Promise.all([
+      publicClient.readContract({ ...f, functionName: "poolBalance" }),
+      publicClient.readContract({ ...f, functionName: "BUDGET" }),
+    ]);
+  }
+  return { wallets: [...set.values()], poolLeft, budget };
+}
+
+export async function fetchStarterOf(agent: Address): Promise<number> {
+  if (FAUCET === zeroAddress) return 0;
+  return Number(await publicClient.readContract({ address: FAUCET, abi: faucetAbi, functionName: "starterOf", args: [agent] }));
 }
 
 // ------------------------------------------------------------------ activity (logs)

@@ -43,17 +43,23 @@ the budget, always to itself. The agent pays only gas.
 ## First run
 
 From the skill folder: `npm install` (once), copy `config.example.json` to `config.json` and set
-`agentMandate` and `demoResearchDesk`. Then `node scripts/am.mjs ready`. It checks the Agent ID,
-Developer Mode (only the user can enable it in the Binance App: Agentic Wallet management > Settings),
-gas, and whether a principal has created an active mandate for this wallet. If not, give the user this
-wallet's address to paste on the Agent Mandate website, where they create the mandate from their main
-wallet.
+`agentMandate`, `demoResearchDesk` and `starterFaucet`. Then `node scripts/am.mjs ready`. It checks the
+Agent ID, Developer Mode (only the user can enable it in the Binance App: Agentic Wallet management >
+Settings; it lasts 7 days and each use extends it), gas, and whether this wallet has an active mandate.
+
+No mandate yet? Two options:
+- **Starter mandate (quickest):** `node scripts/am.mjs preview claim-starter`. One transaction creates a
+  tiny pre-funded mandate (0.00005 BNB) that can only buy demo research notes, whose payments are burned.
+  One per Agent ID wallet, valid 14 days.
+- **Own mandate:** give the user this wallet's address to paste on the website (My mandates), where they
+  create and fund a mandate from their own main wallet.
 
 ## Commands
 
 | Intent | Command |
 |---|---|
 | Ready? | `node scripts/am.mjs ready` |
+| Claim a free starter mandate | `node scripts/am.mjs preview claim-starter` |
 | My mandates, budget left today, permissions | `node scripts/am.mjs mandates` |
 | One mandate | `node scripts/am.mjs show <id>` |
 | Is this action allowed? | `node scripts/am.mjs check <id> <target> <bnb> <dataHex>` |

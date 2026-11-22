@@ -15,7 +15,7 @@ import {
   type AgentRow,
   type MandateView,
 } from "@/lib/chain";
-import { ActivityRow, REPO, Who } from "@/lib/ui";
+import { ActivityRow, Who } from "@/lib/ui";
 
 export default function Home() {
   const [mandates, setMandates] = useState<MandateView[] | null>(null);
@@ -68,7 +68,7 @@ export default function Home() {
           </div>
           <div className="cta">
             <a className="btn btn-primary lg" href="/principal">Create a mandate</a>
-            <a className="btn btn-ghost lg" href="#verify">Verify an agent</a>
+            <a className="btn btn-ghost lg" href="/join">Try it in 10 minutes</a>
           </div>
         </div>
 
@@ -187,8 +187,8 @@ export default function Home() {
           <div className="step"><div className="n">4</div><h4>Stay in control</h4><p>Approve large actions, revoke anytime, withdraw the rest. Your agent&apos;s record is public.</p></div>
         </div>
         <div className="cta" style={{ marginTop: 20 }}>
-          <a className="btn btn-primary" href={`${REPO}/blob/main/docs/GUIDE.en.md`} target="_blank" rel="noopener noreferrer">Read the guide</a>
-          <a className="btn btn-ghost" href={`${REPO}/blob/main/docs/GUIDE.vi.md`} target="_blank" rel="noopener noreferrer">Hướng dẫn tiếng Việt</a>
+          <a className="btn btn-primary" href="/join">Join the challenge</a>
+          <a className="btn btn-ghost" href="/guide">Step-by-step guide</a>
         </div>
       </section>
 

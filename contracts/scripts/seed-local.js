@@ -55,15 +55,25 @@ async function main() {
   await create(principals[3], agents[4], terms({ maxViolations: 0 }), "0.0002");
   await exec(agents[4], 5, deskAddr, E(DEMO.price), buy(7));
   await (await mandate.connect(principals[3]).revoke(5)).wait();
+  // 7-8: two agents claim self-serve starter mandates from the faucet; one buys a note
+  const faucet = await ethers.deployContract("StarterFaucet", [
+    await mandate.getAddress(), await agentId.getAddress(), deskAddr, perms[0].selector, s[0].address,
+  ]);
+  await (await faucet.fund({ value: E("0.001") })).wait();
+  for (const a of [s[12], s[13]]) await (await agentId.setHolder(a.address, true)).wait();
+  await (await faucet.connect(s[12]).claim()).wait();
+  await (await faucet.connect(s[13]).claim()).wait();
   // 6: an ANY-function mandate on the desk, still active, no activity yet
   await (await mandate.connect(principals[4]).create(agents[4].address, terms(), [{ target: deskAddr, selector: ANY }], { value: E("0.0003") })).wait();
 
+  await exec(s[12], Number(await faucet.starterOf(s[12].address)), deskAddr, E(DEMO.price), buy(8));
   const out = {
     network: "localhost",
     chainId: 31337,
     agentId: await agentId.getAddress(),
     agentMandate: await mandate.getAddress(),
     demoResearchDesk: deskAddr,
+    starterFaucet: await faucet.getAddress(),
     deployBlock,
     principals: principals.map((p) => p.address),
     agents: agents.map((a) => a.address),
@@ -79,6 +89,7 @@ async function main() {
   const env = [
     `NEXT_PUBLIC_MANDATE_ADDRESS=${out.agentMandate}`,
     `NEXT_PUBLIC_DESK_ADDRESS=${deskAddr}`,
+    `NEXT_PUBLIC_FAUCET_ADDRESS=${await faucet.getAddress()}`,
     "NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8545",
     "NEXT_PUBLIC_CHAIN_ID=31337",
   ].join("\n");
