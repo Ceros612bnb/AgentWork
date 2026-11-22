@@ -39,6 +39,15 @@ Specification: [docs/MANDATE-SPEC.md](docs/MANDATE-SPEC.md).
 
 ## Contracts (BNB Chain)
 
+Live on BSC mainnet since 2026-11-22: website https://ceros612bnb.github.io/agent-mandate/
+
+| Deployed | Address |
+|---|---|
+| AgentMandate | [`0xEe76D7aa4e930C83DEe5fAF57a2E8eE942c7C5b5`](https://bscscan.com/address/0xEe76D7aa4e930C83DEe5fAF57a2E8eE942c7C5b5#code) |
+| DemoResearchDesk | [`0x993885cAd8EbF4f6E03B3630e3515929a416D189`](https://bscscan.com/address/0x993885cAd8EbF4f6E03B3630e3515929a416D189#code) |
+| StarterFaucet | [`0x4c1d35a7963b3F1Dc6289C84c5CBc142fEa4B208`](https://bscscan.com/address/0x4c1d35a7963b3F1Dc6289C84c5CBc142fEa4B208#code) |
+
+
 | Contract | Notes |
 |---|---|
 | `AgentMandate` | Mandates, enforcement, proposals, delegation, revocation, public record |

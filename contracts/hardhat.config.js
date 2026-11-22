@@ -31,8 +31,12 @@ module.exports = {
     },
   },
   etherscan: {
-    // Etherscan API v2 key (works for BscScan).
-    apiKey: process.env.ETHERSCAN_API_KEY || "",
+    // Etherscan API v2: one key for every chain, chain chosen by ?chainid= (the old BscScan v1 API is retired).
+    apiKey: { bsc: process.env.ETHERSCAN_API_KEY || "", bscTestnet: process.env.ETHERSCAN_API_KEY || "" },
+    customChains: [
+      { network: "bsc", chainId: 56, urls: { apiURL: "https://api.etherscan.io/v2/api?chainid=56", browserURL: "https://bscscan.com" } },
+      { network: "bscTestnet", chainId: 97, urls: { apiURL: "https://api.etherscan.io/v2/api?chainid=97", browserURL: "https://testnet.bscscan.com" } },
+    ],
   },
   sourcify: { enabled: false },
 };

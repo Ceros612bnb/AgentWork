@@ -1,0 +1,12 @@
+{
+  "network": "bsc",
+  "chainId": 56,
+  "agentId": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+  "agentMandate": "0xEe76D7aa4e930C83DEe5fAF57a2E8eE942c7C5b5",
+  "demoResearchDesk": "0x993885cAd8EbF4f6E03B3630e3515929a416D189",
+  "starterFaucet": "0x4c1d35a7963b3F1Dc6289C84c5CBc142fEa4B208",
+  "sponsor": "0xf1eD5C94bf3FA14d83A3616650C0434664642ada",
+  "demoPrice": "0.00001",
+  "deployBlock": 135031543,
+  "deployedAt": "2026-11-22T06:31:39.555Z"
+}
