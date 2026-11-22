@@ -52,7 +52,14 @@ const toAddr = (v) => (isAddress(String(v ?? "")) ? v : fail(`Invalid address: $
 const toBnb = (v) => (/^\d+(\.\d{1,18})?$/.test(String(v ?? "")) ? parseEther(String(v)) : fail(`Invalid BNB amount: ${v}`));
 const toData = (v) => (String(v ?? "") === "" || v === "0x" ? "0x" : isHex(v) && v.length % 2 === 0 ? v : fail(`Invalid calldata hex: ${v}`));
 const bnb = (wei) => formatEther(BigInt(wei));
-const iso = (t) => new Date(Number(t) * 1000).toISOString();
+// Accepts unix seconds (chain values) or a date string (baw returns e.g. "2026-11-29T13:54:07+07:00").
+const iso = (t) => {
+  if (typeof t === "string" && !/^\d+$/.test(t)) {
+    const d = new Date(t);
+    return Number.isNaN(d.getTime()) ? t : d.toISOString();
+  }
+  return new Date(Number(t) * 1000).toISOString();
+};
 
 // Every argument passed to baw is validated to be hex / digits / a fixed flag, so no user-controlled text
 // ever reaches the shell.
