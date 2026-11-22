@@ -43,6 +43,10 @@ const KIND_LABEL: Record<Activity["kind"], string> = {
   revoked: "Revoked",
   created: "Created",
   delegated: "Delegated",
+  deposited: "Deposit",
+  withdrawn: "Withdrawn",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 export function KindPill({ kind }: { kind: Activity["kind"] }) {

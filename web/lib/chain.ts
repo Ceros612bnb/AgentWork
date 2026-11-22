@@ -76,6 +76,10 @@ export const events = {
   blocked: parseAbiItem("event Blocked(uint256 indexed id, address indexed operator, address indexed target, bytes4 selector, uint256 value, uint8 reason)"),
   proposed: parseAbiItem("event Proposed(uint256 indexed proposalId, uint256 indexed id, address indexed target, uint256 value)"),
   revoked: parseAbiItem("event Revoked(uint256 indexed id, address indexed by, bool automatic)"),
+  deposited: parseAbiItem("event Deposited(uint256 indexed id, uint256 amount)"),
+  withdrawn: parseAbiItem("event Withdrawn(uint256 indexed id, uint256 amount)"),
+  approved: parseAbiItem("event Approved(uint256 indexed proposalId)"),
+  rejected: parseAbiItem("event Rejected(uint256 indexed proposalId)"),
 };
 
 export const REASON = ["—", "No Agent ID", "Inactive", "Not allowed", "Over per-action cap", "Over daily cap", "Insufficient funds"];
@@ -225,8 +229,9 @@ export async function fetchStarterOf(agent: Address): Promise<number> {
 // Public BSC RPCs cap eth_getLogs at 50,000 blocks, so logs are read in chunks.
 
 export type Activity = {
-  kind: "executed" | "blocked" | "proposed" | "revoked" | "created" | "delegated";
-  id: number;
+  kind: "executed" | "blocked" | "proposed" | "revoked" | "created" | "delegated" | "deposited" | "withdrawn" | "approved" | "rejected";
+  id: number; // mandate id (resolved from the proposal for approved / rejected)
+  proposalId?: number;
   actor: Address | null;
   target: Address | null;
   value: bigint | null;
@@ -264,6 +269,14 @@ function toActivity(l: { eventName?: string; args?: unknown; blockNumber: bigint
       return { kind: "created", id: Number(a.id), actor: a.principal, target: a.operator, value: a.deposit, detail: "mandate created", ...base };
     case "Delegated":
       return { kind: "delegated", id: Number(a.id), actor: a.operator, target: null, value: null, detail: `delegated from #${a.parent}`, ...base };
+    case "Deposited":
+      return { kind: "deposited", id: Number(a.id), actor: null, target: null, value: a.amount, detail: "budget added by the principal", ...base };
+    case "Withdrawn":
+      return { kind: "withdrawn", id: Number(a.id), actor: null, target: null, value: a.amount, detail: "returned to the principal", ...base };
+    case "Approved":
+      return { kind: "approved", id: -1, proposalId: Number(a.proposalId), actor: null, target: null, value: null, detail: `proposal #${a.proposalId} approved by the principal`, ...base };
+    case "Rejected":
+      return { kind: "rejected", id: -1, proposalId: Number(a.proposalId), actor: null, target: null, value: null, detail: `proposal #${a.proposalId} rejected`, ...base };
     default:
       return null;
   }
@@ -274,7 +287,18 @@ export async function fetchRecentActivity(limit = 25): Promise<Activity[]> {
   const latest = await publicClient.getBlockNumber();
   const from = latest > CHUNK ? latest - CHUNK + 1n : 0n;
   const logs = await logsInRange(from, latest);
-  return logs.map(toActivity).filter((x): x is Activity => x !== null).reverse().slice(0, limit);
+  const acts = await resolveProposals(logs.map(toActivity).filter((x): x is Activity => x !== null));
+  return acts.reverse().slice(0, limit);
+}
+
+/** Approved / Rejected events only carry the proposal id; look up which mandate each belongs to. */
+async function resolveProposals(acts: Activity[]): Promise<Activity[]> {
+  const ids = [...new Set(acts.filter((a) => a.proposalId !== undefined && a.id < 0).map((a) => a.proposalId as number))];
+  const found = await Promise.all(
+    ids.map((pid) => publicClient.readContract({ ...m, functionName: "getProposal", args: [BigInt(pid)] }).catch(() => null))
+  );
+  const map = new Map(ids.map((pid, i) => [pid, found[i] ? Number(found[i]!.mandateId) : -1]));
+  return acts.map((a) => (a.proposalId !== undefined && a.id < 0 ? { ...a, id: map.get(a.proposalId) ?? -1 } : a));
 }
 
 /** The full audit trail of one mandate, from its creation block (at most ~30 chunks). */
@@ -283,10 +307,8 @@ export async function fetchAudit(id: number, createdBlock: bigint): Promise<Acti
   const maxSpan = CHUNK * 30n;
   const from = latest - createdBlock > maxSpan ? latest - maxSpan : createdBlock;
   const logs = await logsInRange(from, latest);
-  return logs
-    .map(toActivity)
-    .filter((x): x is Activity => x !== null && x.id === id)
-    .reverse();
+  const acts = await resolveProposals(logs.map(toActivity).filter((x): x is Activity => x !== null));
+  return acts.filter((x) => x.id === id).reverse();
 }
 
 // ------------------------------------------------------------------ formatting

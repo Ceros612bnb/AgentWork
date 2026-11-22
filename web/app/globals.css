@@ -232,3 +232,6 @@ section.panel { margin-top: 20px; }
 .gbody { min-width: 0; }
 .gbody p, .say { overflow-wrap: anywhere; }
 @media (max-width: 520px) { .gstep { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; } }
+.pill.k-approved { background: var(--up-bg); color: var(--up); }
+.pill.k-rejected { background: var(--down-bg); color: var(--down); }
+.pill.k-deposited, .pill.k-withdrawn { color: var(--accent-text); }
