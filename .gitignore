@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+contracts/artifacts/
+contracts/cache/
+contracts/deployments/localhost.json
+web/.next/
+web/next-env.d.ts
+skill/mandate/config.json
+skill/*/state/
+.claude/
+*.tsbuildinfo

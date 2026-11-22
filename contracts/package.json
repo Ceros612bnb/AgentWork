@@ -1,0 +1,25 @@
+{
+  "name": "agent-mandate-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network bscTestnet",
+    "deploy:bsc": "hardhat run scripts/deploy.js --network bsc",
+    "fork-check": "hardhat run scripts/mandate-fork-check.js",
+    "seed:local": "hardhat run scripts/seed-local.js --network localhost"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "2.0.8",
+    "@nomicfoundation/hardhat-ethers": "3.0.8",
+    "@nomicfoundation/hardhat-network-helpers": "1.0.12",
+    "@nomicfoundation/hardhat-verify": "2.0.11",
+    "@openzeppelin/contracts": "5.1.0",
+    "chai": "4.5.0",
+    "dotenv": "16.4.5",
+    "ethers": "6.13.4",
+    "hardhat": "2.22.15"
+  }
+}
