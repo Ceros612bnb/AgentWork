@@ -10,3 +10,4 @@ skill/mandate/config.json
 skill/*/state/
 .claude/
 *.tsbuildinfo
+web/out/

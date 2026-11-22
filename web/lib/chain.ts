@@ -18,6 +18,12 @@ export const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || 56);
 export const EXPLORER = CHAIN_ID === 56 ? "https://bscscan.com" : null;
 export const configured = MANDATE !== zeroAddress;
 
+/** Site base path (GitHub Pages serves the site under /<repo>). Internal links go through these helpers. */
+export const BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
+export const to = (path: string) => `${BASE}${path}`;
+export const mandateUrl = (id: number | string) => to(`/mandate/?id=${id}`);
+export const agentUrl = (address: string) => to(`/agent/?address=${address}`);
+
 export const chain = defineChain({
   id: CHAIN_ID,
   name: CHAIN_ID === 56 ? "BNB Smart Chain" : `Local chain ${CHAIN_ID}`,

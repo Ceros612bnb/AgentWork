@@ -15,12 +15,20 @@ import {
   selectorLabel,
   short,
   type Activity,
-  type MandateView,
-} from "@/lib/chain";
+  type MandateView, mandateUrl } from "@/lib/chain";
 import { ActivityRow, Who } from "@/lib/ui";
 
-export default function MandatePage({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
+export default function MandatePage() {
+  const [id, setId] = useState<number | null>(null);
+  useEffect(() => {
+    const q = new URLSearchParams(location.search);
+    setId(Number(q.get("id") ?? ""));
+  }, []);
+  if (id === null) return <div className="panel">Loading…</div>;
+  return <MandateDetail key={id} id={id} />;
+}
+
+function MandateDetail({ id }: { id: number }) {
   const [m, setM] = useState<MandateView | null>(null);
   const [root, setRoot] = useState<MandateView | null>(null);
   const [holds, setHolds] = useState<boolean | null>(null);
@@ -55,7 +63,7 @@ export default function MandatePage({ params }: { params: { id: string } }) {
       <div className="profile-head">
         <div>
           <div className="eyebrow">Mandate</div>
-          <h1>#{id} {m && m.parent !== 0 && <span className="muted" style={{ fontSize: 16 }}>delegated from <a className="link" href={`/mandate/${m.parent}`}>#{m.parent}</a></span>}</h1>
+          <h1>#{id} {m && m.parent !== 0 && <span className="muted" style={{ fontSize: 16 }}>delegated from <a className="link" href={mandateUrl(m.parent)}>#{m.parent}</a></span>}</h1>
         </div>
         {status && <span className={`pill big s-${status}`}>{status}</span>}
       </div>
@@ -68,7 +76,7 @@ export default function MandatePage({ params }: { params: { id: string } }) {
               <div><span className="muted">Principal (human wallet)</span><b className="break">{m.principal}</b></div>
               <div><span className="muted">Agent (operator)</span><b><Who address={m.operator} /></b>
                 <span className={holds ? "up" : "down"}>{holds === null ? "…" : holds ? "✓ holds a Binance Agent ID" : "✗ no Agent ID"}</span></div>
-              <div><span className="muted">Root mandate (holds the budget)</span><b><a className="link" href={`/mandate/${root?.id ?? id}`}>#{root?.id ?? id}</a></b></div>
+              <div><span className="muted">Root mandate (holds the budget)</span><b><a className="link" href={mandateUrl(root?.id ?? id)}>#{root?.id ?? id}</a></b></div>
             </div>
           </section>
 
@@ -109,7 +117,7 @@ export default function MandatePage({ params }: { params: { id: string } }) {
                   <tbody>
                     {children.map((c) => (
                       <tr key={c.id}>
-                        <td><a className="link" href={`/mandate/${c.id}`}>#{c.id}</a></td>
+                        <td><a className="link" href={mandateUrl(c.id)}>#{c.id}</a></td>
                         <td><Who address={c.operator} /></td>
                         <td className="r">{fmtBnb(c.dailyCap)}</td>
                         <td><span className={`pill s-${c.active ? "active" : c.revoked ? "revoked" : "expired"}`}>{c.active ? "active" : c.revoked ? "revoked" : "expired"}</span></td>

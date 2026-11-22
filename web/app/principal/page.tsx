@@ -19,8 +19,7 @@ import {
   short,
   txUrl,
   type MandateView,
-  type ProposalView,
-} from "@/lib/chain";
+  type ProposalView, mandateUrl, agentUrl } from "@/lib/chain";
 import { connect, send } from "@/lib/wallet";
 
 type Perm = { target: Address; selector: Hex };
@@ -160,7 +159,7 @@ export default function Principal() {
                     {proposals.map((p) => (
                       <tr key={p.id}>
                         <td>#{p.id}</td>
-                        <td><a className="link" href={`/mandate/${p.mandateId}`}>#{p.mandateId}</a></td>
+                        <td><a className="link" href={mandateUrl(p.mandateId)}>#{p.mandateId}</a></td>
                         <td className="break">{p.target}{p.target.toLowerCase() === DESK.toLowerCase() ? " (demo desk)" : ""}</td>
                         <td className="r">{fmtBnb(p.value)}</td>
                         <td className="r actions">
@@ -220,8 +219,8 @@ export default function Principal() {
                       const s = m.active ? "active" : m.revoked ? "revoked" : "expired";
                       return (
                         <tr key={m.id}>
-                          <td><a className="link" href={`/mandate/${m.id}`}>#{m.id}</a></td>
-                          <td><a className="link" href={`/agent/${m.operator}`}>{short(m.operator)}</a></td>
+                          <td><a className="link" href={mandateUrl(m.id)}>#{m.id}</a></td>
+                          <td><a className="link" href={agentUrl(m.operator)}>{short(m.operator)}</a></td>
                           <td className="r">{m.parent === 0 ? fmtBnb(m.balance) : "—"}</td>
                           <td className="r">{fmtBnb(m.remainingToday)}</td>
                           <td>{fmtCoSign(m.coSignAbove)}</td>

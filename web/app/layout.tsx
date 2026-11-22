@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { to } from "@/lib/chain";
 import { IBM_Plex_Sans } from "next/font/google";
 import { Logo, REPO } from "@/lib/ui";
 import "./globals.css";
@@ -16,20 +17,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={font.className}>
         <header className="top">
           <div className="top-in">
-            <a href="/" className="brand">
+            <a href={to("/")} className="brand">
               <Logo />
               <span>
                 Agent<b>Mandate</b>
               </span>
             </a>
             <nav className="nav">
-              <a href="/join">Join the challenge</a>
-              <a href="/guide">Guide</a>
-              <a href="/#verify">Verify an agent</a>
-              <a href="/principal">My mandates</a>
+              <a href={to("/join/")}>Join the challenge</a>
+              <a href={to("/guide/")}>Guide</a>
+              <a href={to("/#verify")}>Verify an agent</a>
+              <a href={to("/principal/")}>My mandates</a>
             </nav>
             <span className="spacer" />
-            <a className="btn btn-primary sm" href="/principal">Create a mandate</a>
+            <a className="btn btn-primary sm" href={to("/principal/")}>Create a mandate</a>
           </div>
         </header>
         <div className="riskbar">

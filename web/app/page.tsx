@@ -13,8 +13,7 @@ import {
   fmtBnb,
   type Activity,
   type AgentRow,
-  type MandateView,
-} from "@/lib/chain";
+  type MandateView, to, mandateUrl, agentUrl } from "@/lib/chain";
 import { ActivityRow, Who } from "@/lib/ui";
 
 export default function Home() {
@@ -43,8 +42,8 @@ export default function Home() {
   function verify(e: React.FormEvent) {
     e.preventDefault();
     const v = q.trim().replace(/^#/, "");
-    if (/^\d+$/.test(v)) location.href = `/mandate/${v}`;
-    else if (isAddress(v)) location.href = `/agent/${v}`;
+    if (/^\d+$/.test(v)) location.href = mandateUrl(v);
+    else if (isAddress(v)) location.href = agentUrl(v);
     else setQErr("Enter a mandate number (e.g. 12) or an agent wallet address (0x…).");
   }
 
@@ -67,8 +66,8 @@ export default function Home() {
             <div className="badge"><div><strong>0 admin</strong><span>keys, fees or upgrades</span></div></div>
           </div>
           <div className="cta">
-            <a className="btn btn-primary lg" href="/principal">Create a mandate</a>
-            <a className="btn btn-ghost lg" href="/join">Try it in 10 minutes</a>
+            <a className="btn btn-primary lg" href={to("/principal/")}>Create a mandate</a>
+            <a className="btn btn-ghost lg" href={to("/join/")}>Try it in 10 minutes</a>
           </div>
         </div>
 
@@ -187,8 +186,8 @@ export default function Home() {
           <div className="step"><div className="n">4</div><h4>Stay in control</h4><p>Approve large actions, revoke anytime, withdraw the rest. Your agent&apos;s record is public.</p></div>
         </div>
         <div className="cta" style={{ marginTop: 20 }}>
-          <a className="btn btn-primary" href="/join">Join the challenge</a>
-          <a className="btn btn-ghost" href="/guide">Step-by-step guide</a>
+          <a className="btn btn-primary" href={to("/join/")}>Join the challenge</a>
+          <a className="btn btn-ghost" href={to("/guide/")}>Step-by-step guide</a>
         </div>
       </section>
 

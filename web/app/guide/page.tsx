@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DESK, FAUCET, MANDATE, CHAIN_ID } from "@/lib/chain";
+import { DESK, FAUCET, MANDATE, CHAIN_ID, to } from "@/lib/chain";
 import { REPO } from "@/lib/ui";
 
 type Lang = "en" | "vi";
@@ -179,7 +179,7 @@ export default function Guide() {
           </Step>
 
           <Step n="10" title={vi ? "Kiểm tra bạn đã được tính" : "Check that you are counted"}>
-            <p>{vi ? <>Vào trang <a className="link" href="/join">Join</a>, dán địa chỉ ví Agentic vào ô &quot;Am I counted?&quot;.</> : <>Open <a className="link" href="/join">Join</a> and paste your Agentic Wallet address into &quot;Am I counted?&quot;.</>}</p>
+            <p>{vi ? <>Vào trang <a className="link" href={to("/join/")}>Join</a>, dán địa chỉ ví Agentic vào ô &quot;Am I counted?&quot;.</> : <>Open <a className="link" href={to("/join/")}>Join</a> and paste your Agentic Wallet address into &quot;Am I counted?&quot;.</>}</p>
           </Step>
         </div>
       </section>

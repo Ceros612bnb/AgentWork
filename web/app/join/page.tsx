@@ -11,8 +11,7 @@ import {
   fetchStarterOf,
   fmtBnb,
   publicClient,
-  mandateAbi,
-} from "@/lib/chain";
+  mandateAbi, to, mandateUrl } from "@/lib/chain";
 import { Who } from "@/lib/ui";
 
 const GOAL = 30;
@@ -71,8 +70,8 @@ export default function Join() {
             and watch the contract block it. About 10 minutes if your Agentic Wallet is already set up.
           </p>
           <div className="cta">
-            <a className="btn btn-primary lg" href="/guide">Step-by-step guide</a>
-            <a className="btn btn-ghost lg" href="/guide?lang=vi">Hướng dẫn tiếng Việt</a>
+            <a className="btn btn-primary lg" href={to("/guide/")}>Step-by-step guide</a>
+            <a className="btn btn-ghost lg" href={to("/guide/?lang=vi")}>Hướng dẫn tiếng Việt</a>
           </div>
         </div>
         <div className="panel">
@@ -113,7 +112,7 @@ export default function Join() {
               <li>{check.mandates} mandate(s) · {check.executed.toString()} action(s) executed · {check.blocked.toString()} attempt(s) blocked</li>
             </ul>
             {!check.isAgent && <p className="muted">Use the Agentic Wallet address that holds your Agent ID (ask your agent: &quot;what is my Agentic Wallet BSC address?&quot;).</p>}
-            {check.starter > 0 && <a className="link" href={`/mandate/${check.starter}`}>Open your starter mandate →</a>}
+            {check.starter > 0 && <a className="link" href={mandateUrl(check.starter)}>Open your starter mandate →</a>}
           </div>
         )}
       </section>

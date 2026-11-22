@@ -59,7 +59,7 @@ mandate and pull its unused budget back into the pool. It cannot touch anyone el
 ```
 contracts/   Hardhat: AgentMandate.sol, DemoResearchDesk.sol, mocks, tests, scripts
 skill/       mandate Skill (SKILL.md + scripts/am.mjs) for Agentic Wallet users
-web/         Next.js: live activity, verify an agent, mandate audit pages, principal console
+web/         Next.js static site (GitHub Pages): live activity, join, guide, verify, audit pages, principal console
 docs/        Specification, research survey, user guides (VI/EN)
 ```
 
@@ -75,6 +75,9 @@ STARTER_POOL=0.002 npm run deploy:bsc                   # AgentMandate, DemoRese
 Local: `npx hardhat node`, then `npm run seed:local` (six scenarios, writes `web/.env.local`).
 Skill: `cd skill/mandate && npm install && cp config.example.json config.json && node scripts/am.mjs ready`.
 Web: `cd web && npm install && npm run dev`. Users start at `/join` and follow `/guide` (English and Vietnamese).
+
+The website is a static export hosted on **GitHub Pages** (https://ceros612bnb.github.io/agent-mandate/), built by
+`.github/workflows/pages.yml` on every push to `web/`. Contract addresses are public values in `web/.env.production`.
 
 ## Hackathon safety checklist
 

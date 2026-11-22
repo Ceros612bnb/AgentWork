@@ -2,13 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { isAddress, type Address } from "viem";
-import { fetchMandate, fetchRecord, fmtBnb, fmtDate, type MandateView } from "@/lib/chain";
+import { fetchMandate, fetchRecord, fmtBnb, fmtDate, type MandateView, mandateUrl } from "@/lib/chain";
 import { Avatar } from "@/lib/ui";
 
 type Rec = { executed: bigint; blocked: bigint; autoRevoked: number; spent: bigint };
 
-export default function AgentPage({ params }: { params: { address: string } }) {
-  const address = params.address as Address;
+export default function AgentPage() {
+  const [address, setAddress] = useState<string | null>(null);
+  useEffect(() => {
+    const q = new URLSearchParams(location.search);
+    setAddress(q.get("address") ?? "");
+  }, []);
+  if (address === null) return <div className="panel">Loading…</div>;
+  return <AgentDetail key={address} address={address as Address} />;
+}
+
+function AgentDetail({ address }: { address: Address }) {
   const [rec, setRec] = useState<Rec | null>(null);
   const [isAgent, setIsAgent] = useState<boolean | null>(null);
   const [mandates, setMandates] = useState<MandateView[]>([]);
@@ -55,7 +64,7 @@ export default function AgentPage({ params }: { params: { address: string } }) {
                   const s = m.active ? "active" : m.revoked ? "revoked" : "expired";
                   return (
                     <tr key={m.id}>
-                      <td><a className="link" href={`/mandate/${m.id}`}>#{m.id}</a>{m.parent ? <span className="muted"> ← #{m.parent}</span> : null}</td>
+                      <td><a className="link" href={mandateUrl(m.id)}>#{m.id}</a>{m.parent ? <span className="muted"> ← #{m.parent}</span> : null}</td>
                       <td className="break">{m.principal}</td>
                       <td className="r">{fmtBnb(m.perTxCap)}</td>
                       <td className="r">{fmtBnb(m.dailyCap)}</td>

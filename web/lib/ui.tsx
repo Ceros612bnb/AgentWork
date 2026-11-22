@@ -1,5 +1,5 @@
 import type { Activity } from "@/lib/chain";
-import { fmtBnb, short, txUrl } from "@/lib/chain";
+import { agentUrl, fmtBnb, mandateUrl, short, txUrl } from "@/lib/chain";
 
 export const REPO = "https://github.com/Ceros612bnb/agent-mandate";
 
@@ -29,7 +29,7 @@ export function Avatar({ address, size = 28 }: { address: string; size?: number 
 
 export function Who({ address, href }: { address: string; href?: string }) {
   return (
-    <a className="who" href={href ?? `/agent/${address}`}>
+    <a className="who" href={href ?? agentUrl(address)}>
       <Avatar address={address} size={22} />
       {short(address)}
     </a>
@@ -55,7 +55,7 @@ export function ActivityRow({ a, showMandate = true }: { a: Activity; showMandat
     <div className="arow">
       <KindPill kind={a.kind} />
       <span className="adetail">
-        {showMandate && <a className="link" href={`/mandate/${a.id}`}>#{a.id}</a>} {a.detail}
+        {showMandate && <a className="link" href={mandateUrl(a.id)}>#{a.id}</a>} {a.detail}
         {a.target && a.kind !== "created" ? <span className="muted"> · to {short(a.target)}</span> : null}
       </span>
       <span className={`aval num ${a.kind === "blocked" ? "down" : a.kind === "executed" ? "up" : ""}`}>
