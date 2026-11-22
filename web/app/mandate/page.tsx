@@ -75,7 +75,7 @@ function MandateDetail({ id }: { id: number }) {
             <div className="kv2">
               <div><span className="muted">Principal (human wallet)</span><b className="break">{m.principal}</b></div>
               <div><span className="muted">Agent (operator)</span><b><Who address={m.operator} /></b>
-                <span className={holds ? "up" : "down"}>{holds === null ? "…" : holds ? "✓ holds a Binance Agent ID" : "✗ no Agent ID"}</span></div>
+                <span className={holds ? "up" : "down"}>{holds === null ? "…" : holds ? "✓ holds an Agent ID" : "✗ no Agent ID"}</span></div>
               <div><span className="muted">Root mandate (holds the budget)</span><b><a className="link" href={mandateUrl(root?.id ?? id)}>#{root?.id ?? id}</a></b></div>
             </div>
           </section>

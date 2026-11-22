@@ -221,6 +221,7 @@ export default function Guide() {
                     ["PENDING_CONFIRMATION", "Mở Binance App và xác nhận giao dịch trong 5 phút."],
                     ["Pool empty", "Quỹ Starter tạm hết. Báo đội, hoặc tạo mandate của riêng bạn (lối đầy đủ)."],
                     ["Web báo không có Agent ID", "Bạn dán nhầm địa chỉ. Dùng địa chỉ BSC của ví Agentic (bước 5)."],
+                    ["Ví (ví dụ MetaMask) cảnh báo trang hoặc contract \"không xác định\" / \"độc hại\" khi tạo mandate", "Trang và contract mới nên chưa có danh tiếng trong các bộ lọc tự động, và chúng tôi đã gửi báo cáo nhận diện nhầm. Trước khi xác nhận, hãy tự kiểm tra: đúng trang ceros612bnb.github.io/agent-mandate, đúng contract 0xEe76D7aa4e930C83DEe5fAF57a2E8eE942c7C5b5 (đã verify trên BscScan), số BNB đúng bằng ngân sách bạn nhập và không có yêu cầu cấp quyền token. Nếu không chắc, đừng xác nhận; lối Starter qua agent không cần kết nối ví trên web."],
                   ]
                 : [
                     ["10002004 / AUTH_REJECTED at sign-in", "The QR or pairing code expired. Redo step 3 from the start."],
@@ -231,6 +232,7 @@ export default function Guide() {
                     ["PENDING_CONFIRMATION", "Open the Binance App and confirm within 5 minutes."],
                     ["Pool empty", "The starter pool ran out. Tell the team, or create your own mandate (full path)."],
                     ["The site says no Agent ID", "Wrong address. Use your Agentic Wallet BSC address (step 5)."],
+                    ["Your wallet (e.g. MetaMask) warns the site or contract is \"unknown\" or \"malicious\" when creating a mandate", "The site and contracts are new, so automated filters have no reputation for them yet; we have reported it as a false positive. Before confirming, check it yourself: the site is ceros612bnb.github.io/agent-mandate, the contract is 0xEe76D7aa4e930C83DEe5fAF57a2E8eE942c7C5b5 (verified on BscScan), the BNB amount equals the budget you typed, and there is no token approval. If unsure, do not confirm; the starter path through your agent needs no wallet connection on the site."],
                   ]
               ).map(([a, b]) => <tr key={a}><td>{a}</td><td>{b}</td></tr>)}
             </tbody>

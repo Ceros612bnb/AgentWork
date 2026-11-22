@@ -58,7 +58,7 @@ export default function Home() {
           <p className="lead">
             Set what your agent may pay for, how much per action and per day, and until when. The contract enforces it,
             so an agent tricked by a malicious prompt still cannot step outside. Anyone can verify the real person
-            accountable for it through Binance Agent ID.
+            accountable for it through its Agent ID.
           </p>
           <div className="badges">
             <div className="badge"><div><strong>{blocked}</strong><span>out-of-scope attempts stopped</span></div></div>
@@ -167,7 +167,7 @@ export default function Home() {
           <table className="compare">
             <thead><tr><th>Layer (Binance Global Policy)</th><th>Agent Mandate</th></tr></thead>
             <tbody>
-              <tr><td>1–2 · Agent identity, accountable principal</td><td>The agent must hold a Binance Agent ID (one per user, non-transferable); the principal is a separate human wallet</td></tr>
+              <tr><td>1–2 · Agent identity, accountable principal</td><td>The agent must hold an Agent ID (one per user, non-transferable, issued in the Binance App); the principal is a separate human wallet</td></tr>
               <tr><td>3 · Mandate and least privilege</td><td>Allowed contracts and functions, cap per action and per day, expiry; actions above a threshold wait for the human</td></tr>
               <tr><td>4 · Delegation</td><td>Agents can delegate to sub-agents, but scope only narrows and spending counts against every level</td></tr>
               <tr><td>5 · Revocation and audit</td><td>One-click revoke of a whole branch; out-of-scope attempts are recorded and auto-revoke a hijacked agent</td></tr>

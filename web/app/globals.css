@@ -1,41 +1,42 @@
-/* Exchange-style design tokens: dark by default, light when the system asks for it. */
+/* Agent Mandate design tokens: dark by default, light when the system asks for it.
+   Own palette (indigo accent, cool neutrals) so the site is not mistaken for any exchange's brand. */
 :root {
   color-scheme: dark;
-  --bg: #181a20;
-  --panel: #1e2329;
-  --panel-2: #2b3139;
-  --line: #2b3139;
-  --fg: #eaecef;
-  --muted: #848e9c;
-  --muted-2: #707a8a;
-  --yellow: #fcd535;
-  --yellow-hover: #f0b90b;
-  --on-yellow: #202630;
-  --accent-text: #fcd535;
-  --up: #2ebd85;
-  --down: #f6465d;
-  --up-bg: rgba(46, 189, 133, 0.12);
-  --down-bg: rgba(246, 70, 93, 0.12);
-  --warn-bg: #2b2616;
+  --bg: #0d1017;
+  --panel: #151a24;
+  --panel-2: #1f2633;
+  --line: #232b38;
+  --fg: #e8ecf3;
+  --muted: #8b95a7;
+  --muted-2: #6b7588;
+  --yellow: #6d5dfc; /* accent background (kept token name) */
+  --yellow-hover: #5a4af0;
+  --on-yellow: #ffffff;
+  --accent-text: #a89dff;
+  --up: #22c55e;
+  --down: #ef4444;
+  --up-bg: rgba(34, 197, 94, 0.12);
+  --down-bg: rgba(239, 68, 68, 0.12);
+  --warn-bg: #2a2113;
   --radius: 16px;
 }
 @media (prefers-color-scheme: light) {
   :root {
     color-scheme: light;
-    --bg: #ffffff;
-    --panel: #fafafa;
-    --panel-2: #f5f5f5;
-    --line: #eaecef;
-    --fg: #1e2329;
-    --muted: #707a8a;
-    --muted-2: #929aa5;
-    --yellow-hover: #f0b90b;
-    --accent-text: #c99400;
-    --up: #03a66d;
-    --down: #cf304a;
-    --up-bg: rgba(3, 166, 109, 0.1);
-    --down-bg: rgba(207, 48, 74, 0.1);
-    --warn-bg: #fef6d8;
+    --bg: #f7f8fb;
+    --panel: #ffffff;
+    --panel-2: #eef1f6;
+    --line: #e3e7ee;
+    --fg: #141a26;
+    --muted: #5b6578;
+    --muted-2: #8a93a5;
+    --yellow-hover: #5a4af0;
+    --accent-text: #5b4bdb;
+    --up: #15803d;
+    --down: #dc2626;
+    --up-bg: rgba(21, 128, 61, 0.1);
+    --down-bg: rgba(220, 38, 38, 0.1);
+    --warn-bg: #fff4e0;
   }
 }
 
@@ -170,7 +171,7 @@ footer div { max-width: 1200px; margin: 0 auto; padding: 24px 16px; color: var(-
 .aval { text-align: right; font-weight: 600; white-space: nowrap; }
 .pill.k-executed, .pill.s-active { background: var(--up-bg); color: var(--up); }
 .pill.k-blocked, .pill.s-revoked { background: var(--down-bg); color: var(--down); }
-.pill.k-proposed { background: rgba(252, 213, 53, 0.14); color: var(--accent-text); }
+.pill.k-proposed { background: rgba(109, 93, 252, 0.16); color: var(--accent-text); }
 .pill.k-revoked { background: var(--down-bg); color: var(--down); }
 .pill.s-expired { color: var(--muted); }
 .pill.big { font-size: 14px; padding: 6px 14px; margin-left: auto; text-transform: capitalize; }

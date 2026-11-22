@@ -107,7 +107,7 @@ export default function Join() {
           <div className={`panel notice ${counted ? "ok" : "bad"}`}>
             <p style={{ marginTop: 0 }}><b>{counted ? "✓ You are counted. Thank you!" : "Not counted yet."}</b></p>
             <ul className="checklist">
-              <li className={check.isAgent ? "up" : "down"}>{check.isAgent ? "✓" : "✗"} Holds a Binance Agent ID</li>
+              <li className={check.isAgent ? "up" : "down"}>{check.isAgent ? "✓" : "✗"} Holds an Agent ID</li>
               <li className={check.starter ? "up" : ""}>{check.starter ? `✓ Starter mandate #${check.starter} claimed` : "○ No starter mandate yet"}</li>
               <li>{check.mandates} mandate(s) · {check.executed.toString()} action(s) executed · {check.blocked.toString()} attempt(s) blocked</li>
             </ul>

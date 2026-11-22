@@ -41,7 +41,7 @@ function AgentDetail({ address }: { address: Address }) {
         <div>
           <div className="eyebrow">Agent</div>
           <h1 className="break">{address}</h1>
-          <span className={isAgent ? "up" : "down"}>{isAgent === null ? "…" : isAgent ? "✓ holds a Binance Agent ID: one accountable person" : "✗ no Agent ID"}</span>
+          <span className={isAgent ? "up" : "down"}>{isAgent === null ? "…" : isAgent ? "✓ holds an Agent ID: one accountable person" : "✗ no Agent ID"}</span>
         </div>
       </div>
       {err && <div className="panel">Could not read the chain: {err}</div>}

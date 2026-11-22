@@ -143,7 +143,11 @@ export default function Principal() {
       {!account ? (
         <div className="panel" style={{ marginTop: 16 }}>
           <button className="btn btn-primary lg" onClick={onConnect}>Connect your wallet</button>
-          <p className="muted" style={{ marginBottom: 0 }}>We never ask for a seed phrase, private key or pairing code.</p>
+          <p className="muted" style={{ marginBottom: 0 }}>
+            We never ask for a seed phrase, private key or pairing code. Your wallet may warn that this new site or contract
+            is unknown: before confirming, check the contract is <code>{MANDATE}</code> (verified on BscScan), the amount
+            equals your budget, and there is no token approval.
+          </p>
         </div>
       ) : (
         <>
@@ -180,7 +184,7 @@ export default function Principal() {
               <label className="full">
                 Agent wallet (its Agentic Wallet address, must hold an Agent ID)
                 <input value={agent} onChange={(e) => setAgent(e.target.value.trim())} placeholder="0x…" required />
-                {agentOk === true && <span className="up">✓ holds a Binance Agent ID</span>}
+                {agentOk === true && <span className="up">✓ holds an Agent ID</span>}
                 {agentOk === false && <span className="down">✗ this wallet has no Agent ID, so it cannot be an operator</span>}
               </label>
               <label>Budget to deposit (BNB)<input value={budget} onChange={(e) => setBudget(e.target.value)} inputMode="decimal" /></label>
